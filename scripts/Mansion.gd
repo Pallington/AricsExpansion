@@ -2076,16 +2076,6 @@ func _on_alchemy_pressed():
 	alchemyclear()
 	get_node("MainScreen/mansion/alchemypanel/brewbutton").set_disabled(true)
 
-func alchemyclear():
-	get_node("MainScreen/mansion/alchemypanel/Panel 2").hide()
-	get_node("MainScreen/mansion/alchemypanel/Label").hide()
-	get_node("MainScreen/mansion/alchemypanel/Label1").hide()
-	for i in get_node("MainScreen/mansion/alchemypanel/VBoxContainer").get_children():
-		if i.get_name() != 'Panel':
-			i.hide()
-			i.queue_free()
-	
-
 func brewlistpressed(potion): #merge with existing function.
 	potselected = potion
 	var counter = get_node("MainScreen/mansion/alchemypanel/brewcounter").get_value()
