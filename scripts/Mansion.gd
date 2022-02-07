@@ -2027,6 +2027,134 @@ func prisonertab(number):
 	get_node("MainScreen/slave_tab").tab = 'prison'
 	get_node("MainScreen/slave_tab").slavetabopen()
 
+###---Added by Expansion---### Added by Pallington
+var potselected
+
+func _on_alchemy_pressed():
+	background_set('alchemy' + str(globals.state.mansionupgrades.mansionalchemy))
+	yield(self, 'animfinished')
+	hide_everything()
+	get_node("MainScreen/mansion/alchemypanel").show()
+	if globals.state.tutorial.alchemy == false:
+		get_node("tutorialnode").alchemy()
+	if globals.state.sidequests.chloe == 8 && globals.state.mansionupgrades.mansionalchemy >= 1:
+		globals.events.chloealchemy()
+	potselected = null
+	var potlist = get_node("MainScreen/mansion/alchemypanel/ScrollContainer/selectpotionlist")
+	var potline = get_node("MainScreen/mansion/alchemypanel/ScrollContainer/selectpotionlist/selectpotionline")
+	var maintext = get_node("MainScreen/mansion/alchemypanel/alchemytext")
+	if globals.state.mansionupgrades.mansionalchemy == 0:
+		maintext.set_bbcode("Your alchemy room lacks sufficient tools to craft your own potions. You have to unlock it from [color=yellow]Mansion Upgrades[/color] first.")
+		for i in get_node("MainScreen/mansion/alchemypanel").get_children():
+			i.hide()
+		maintext.show()
+		return
+	else:
+		get_node("MainScreen/mansion/alchemypanel/alchemytext").set_bbcode("This is your alchemy room. Chemistry equipment is ready to use and shelves contain your fresh ingredients.")
+		get_node("MainScreen/mansion/alchemypanel/potdescription").set_bbcode('')
+		for i in get_node("MainScreen/mansion/alchemypanel").get_children():
+			i.show()
+	for i in potlist.get_children():
+		if i != potline:
+			i.hide()
+			i.queue_free()
+	var array = []
+	for i in globals.itemdict.values():
+		if i.recipe != '' && globals.evaluate(i.reqs):
+			array.append(i)
+	array.sort_custom(globals.items,'sortitems')
+	for i in array:
+		var newpotline = potline.duplicate()
+		potlist.add_child(newpotline)
+		if i.icon != null:
+			newpotline.get_node("potbutton/icon").set_texture(i.icon)
+		newpotline.show()
+		newpotline.get_node("potnumber").set_text(str(i.amount))
+		newpotline.get_node("potbutton").set_text(i.name)
+		newpotline.get_node("potbutton").connect('pressed', self, 'brewlistpressed', [i])
+		newpotline.set_name(i.name)
+	alchemyclear()
+	get_node("MainScreen/mansion/alchemypanel/brewbutton").set_disabled(true)
+
+func alchemyclear():
+	get_node("MainScreen/mansion/alchemypanel/Panel 2").hide()
+	get_node("MainScreen/mansion/alchemypanel/Label").hide()
+	get_node("MainScreen/mansion/alchemypanel/Label1").hide()
+	for i in get_node("MainScreen/mansion/alchemypanel/VBoxContainer").get_children():
+		if i.get_name() != 'Panel':
+			i.hide()
+			i.queue_free()
+	
+
+func brewlistpressed(potion): #merge with existing function.
+	potselected = potion
+	var counter = get_node("MainScreen/mansion/alchemypanel/brewcounter").get_value()
+	var text = ''
+	var recipedict = {}
+	var brewable = true
+	recipedict = globals.items[potion.recipe]
+	var array = []
+	for i in recipedict:
+		array.append(i)
+	array.sort_custom(globals.items,'sortbytype')
+	alchemyclear()
+	if potselected.icon != null:
+		get_node("MainScreen/mansion/alchemypanel/Panel 2").show()
+		get_node("MainScreen/mansion/alchemypanel/Panel 2/bigicon").set_texture(potselected.icon)
+	get_node("MainScreen/mansion/alchemypanel/Label").show()
+	get_node("MainScreen/mansion/alchemypanel/Label1").show()
+	for i in array:
+		if (globals.items.itemlist[i].type == "potion" || globals.items.itemlist[i].type == "ingredient"): #editededed
+			#print("one")
+			var item = globals.itemdict[i]
+			var newpanel = get_node("MainScreen/mansion/alchemypanel/VBoxContainer/Panel").duplicate()
+			get_node("MainScreen/mansion/alchemypanel/VBoxContainer/").add_child(newpanel)
+			newpanel.show()
+			newpanel.get_node("icon").set_texture(item.icon)
+			newpanel.get_node("icon").connect("mouse_entered",globals, 'showtooltip', [item.description])
+			newpanel.get_node("icon").connect("mouse_exited",globals, 'hidetooltip')
+			newpanel.get_node('name').set_text(item.name)
+			newpanel.get_node("number").set_text(str(recipedict[i]*counter))
+			newpanel.get_node("totalnumber").set_text(str(item.amount))
+			if item.amount < recipedict[i]*counter:
+				newpanel.get_node("totalnumber").set('custom_colors/font_color', Color(1,0.29,0.29))
+				brewable = false
+		else:
+			#print("two")
+			var item = globals.itemdict[i]
+			var founditem = 0
+			for i in globals.state.unstackables.values():
+				print(i.code)
+				if i.code == item.code && i.owner == null:
+					founditem += 1
+			var newpanel = get_node("MainScreen/mansion/alchemypanel/VBoxContainer/Panel").duplicate()
+			get_node("MainScreen/mansion/alchemypanel/VBoxContainer/").add_child(newpanel)
+			newpanel.show()
+			newpanel.get_node("icon").set_texture(item.icon)
+			newpanel.get_node("icon").connect("mouse_entered",globals, 'showtooltip', [item.description])
+			newpanel.get_node("icon").connect("mouse_exited",globals, 'hidetooltip')
+			newpanel.get_node('name').set_text(item.name)
+			newpanel.get_node("number").set_text(str(recipedict[i]*counter))
+			newpanel.get_node("totalnumber").set_text(str(founditem))
+			if founditem < recipedict[i]*counter:
+				newpanel.get_node("totalnumber").set('custom_colors/font_color', Color(1,0.29,0.29))
+				brewable = false
+		#print("three")
+	text = text + '\n[center][color=aqua]'+ potselected.name + '[/color][/center]\n' + '' + potselected.description + '\n'
+	for i in get_tree().get_nodes_in_group('alchemypot'):
+		if i.get_text() != potion.name && i.is_pressed() == true:
+			i.set_pressed(false)
+	get_node("MainScreen/mansion/alchemypanel/potdescription").set_bbcode(text)
+	if counter == 0:
+		brewable = false
+	if brewable == false:
+		get_node("MainScreen/mansion/alchemypanel/brewbutton").set_disabled(true)
+		#print("falseset")
+	else:
+		get_node("MainScreen/mansion/alchemypanel/brewbutton").set_disabled(false)
+		#print("trueset")
+###---Added by Expansion---### Added by Pallington
+
 ###---Added by Expansion---### Added by Deviate, Tweaked by Aric, Tested by Banana
 var birthmother
 func childbirth_loop(person):
