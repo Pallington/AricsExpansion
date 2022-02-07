@@ -17,7 +17,14 @@ var ropewearoutrate = 10.0
 var learnpointsperstat = 3.0
 var attributepointsperupgradepoint = 1.0
 var specializationchance = 5.0
-
+#ralphC - Mana Eater Mechanics (incl Succubus, Golem, etc.)
+var basemanafoodconsumption = 10.0 #ralphC
+var orgasmmana = 3 #ralphC - 3 is default
+var succubusagemod = { #ralphC - [child,teen,adult] Succubus base mana food consumption multiplier
+	child = 1.0, teen = 2.0, adult = 3.0
+}
+var succubushungerlevel = [1.5,3.0,7.0] #ralphC - [munchies = 1.5, sex crazed 3, death 7] see mansion.gd
+#/ralphC
 
 ###---Added by Expansion---### Difficulty Adjustment
 var playerstartbeauty = 70.0
@@ -39,12 +46,6 @@ var growuptimeadult = 6.0
 ###---End Expansion---###
 var traitinheritchance = 80.0
 var babynewtraitchance = 20.0
-###---Added by Expansion---### Pregnancy Expanded (Deviate)
-var ovulationtype1stage1 = 8
-var ovulationtype1stage2 = 15
-var ovulationtype2stage1 = 12
-var ovulationtype2stage2 = 15
-###---End Expansion---###
 
 #slave stats & combat
 
@@ -65,6 +66,9 @@ var priceperbasebeauty = 2.5
 var priceperbonusbeauty = 1.5
 var pricebonusvirgin = 0.15
 var pricebonusfuta = 0.1
+###---Added by Expansion---### centerflag982
+var pricebonusdickgirl = 0.05
+###---End Expansion---###					
 var pricebonusbadtrait = -0.1
 var pricebonustoxicity = -0.33
 var priceuncivilized = -0.5
@@ -88,7 +92,7 @@ var agepricemods = {
 ###---End Expansion---###
 
 
-var luxuryreqs = {"slave" : 0, poor = 5, commoner = 15,rich = 25, noble = 40}
+var luxuryreqs = {"slave" : 0, poor = 5, commoner = 15, rich = 25, noble = 40}
 
 #upgrades
 
@@ -102,6 +106,8 @@ var list = {
 		basehealth = {descript = "Character's health before modifiers", min = 1.0, max = 1000.0},
 		healthperend = {descript = "Bonus health per point of endurance", min = 0.0, max = 1000.0},
 		playerbonusstatpoint = {descript = "Bonus player stat points during char creation", min = 0.0, max = 1000.0},
+		playermaxstats = {descript = "Max points per player stat during char creation", min = 4.0, max = 1000.0},
+		storymodeanyrace = {descript = "Choose any race when starting story mode"},
 		basefoodconsumption = {descript = "Basic food consumption for characters per day", min = 0.0, max = 100.0},
 		skillpointsperlevel = {descript = "Attribute points gained on level-up", min = 0.0, max = 100.0},
 		learnpointsperstat = {descript = "Number of skill points required to increase mental stat by 1", min = 1.0, max = 100.0},
@@ -128,10 +134,6 @@ var list = {
 		growuptimeadult = {descript = "Time required for baby to mature", min = 1.0, max = 1000.0},
 		traitinheritchance = {descript = "Chance to inherit a parent's trait", min = 0.0, max = 100.0},
 		babynewtraitchance = {descript = "Chance to gain a new trait", min = 0.0, max = 100.0},
-		ovulationtype1stage1 = {descript = "Duration of ovulation for normal ovulation cycle", min = 0.0, max = 100.0},
-		ovulationtype1stage2 = {descript = "Duration of non-ovulation for normal ovulation cycle", min = 0.0, max = 100.0},
-		ovulationtype2stage1 = {descript = "Duration of ovulation for extended ovulation cycle", min = 1.0, max = 100.0},
-		ovulationtype2stage2 = {descript = "Duration of non-ovulation for extended ovulation cycle", min = 1.0, max = 100.0},
 	},
 	'Combat' : {
 		damageperstr = {descript = "Raw damage per strength", min = 0.0, max = 100.0},
@@ -166,3 +168,6 @@ var list = {
 	},
 }
 ###---End Expansion---###
+var playermaxstats = 7
+
+var storymodeanyrace = false

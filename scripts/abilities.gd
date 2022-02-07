@@ -274,12 +274,12 @@ var abilitydict = {
 		effect = null,
 		can_miss = true,
 		learncost = 50,
-		power = 2,
-		cooldown = 2,
+		power = 1,
+		cooldown = 3,
 		type = 'spell',
 		price = 100,
-		costenergy = 5,
-		costmana = 5,
+		costenergy = 0,
+		costmana = 8,
 		costother = '',
 		attributes = ['damage'],
 		reqs = {'level' : 2, 'smaf' : 1},
@@ -308,7 +308,7 @@ var abilitydict = {
 		type = 'spell',
 		price = 200,
 		costenergy = 0,
-		costmana = 6,
+		costmana = 10,
 		costother = '',
 		attributes = ['damage','debuff'],
 		reqs = {'level' : 4, 'smaf' : 4},
@@ -881,6 +881,7 @@ func lust(combatant, value):
 var passivesdict = {
 	doubleattack15 = {code = 'doubleattack15', effect = 'doubleattack', effectvalue = 15, descript = '15% chance to attack twice'},
 	doubleattack25 = {code = 'doubleattack25', effect = 'doubleattack', effectvalue = 25, descript = '25% chance to attack twice'},
+	doubleattack50 = {code = 'doubleattack50', effect = 'doubleattack', effectvalue = 50, descript = '50% chance to attack twice'},
 	cultleaderpassive = {code = 'cultleaderpassive', effect = 'cultleaderpassive', effectvalue = null, descript = 'Grows stronger when allies defeated'}
 }
 

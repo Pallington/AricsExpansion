@@ -1292,7 +1292,7 @@ var itemlist = {
 	hyperlactationpot = {
 		code = 'hyperlactationpot',
 		name = 'Hyperlactation Potion',
-		icon = load("res://files/aric_expansion_images/items/hyperlactation.png"),
+		icon = load("res://files/aric_expansion_images/potions/rendrassa_hyperlactation_bottle.png"),
 		description = "Stimulates the milk glands of a lactating person to cause overwhelming lactation OR forces someone who isn't lactating to start lactating. Can permanently impair normal behavior and requires consistant milking.",
 		effect = 'hyperlactationpoteffect',
 		recipe = 'recipehyperlactationpot',
@@ -1306,7 +1306,7 @@ var itemlist = {
 	bottledmilk = {
 		code = 'bottledmilk',
 		name = 'Bottled Milk',
-		icon = load("res://files/aric_expansion_images/items/milk_bottle_trans.png"),
+		icon = load("res://files/aric_expansion_images/potions/rendrassa_milk_bottle.png"),
 		description = "Milk that has been refined and bottled. During the refining process, it has gained the properties to restore some [color=aqua]Energy[/color] as well the possibility to restore some significant [color=aqua]Stress[/color]. ",
 		effect = 'milkeffect',
 		recipe = '',
@@ -1320,7 +1320,7 @@ var itemlist = {
 	bottledsemen = {
 		code = 'bottledsemen',
 		name = 'Bottled Semen',
-		icon = load("res://files/aric_expansion_images/items/milk_bottle_trans.png"),
+		icon = load("res://files/aric_expansion_images/potions/rendrassa_cum_bottle.png"),
 		description = "Semen that has been refined and bottled. During the refining process, it has gained the properties to restore minor [color=aqua]Energy[/color] as well as make the drinker feel [color=aqua]Lewd[/color] by drinking it. ",
 		effect = 'semeneffect',
 		recipe = '',
@@ -1334,7 +1334,7 @@ var itemlist = {
 	bottledlube = {
 		code = 'bottledlube',
 		name = 'Bottled Lube',
-		icon = load("res://files/aric_expansion_images/items/milk_bottle_trans.png"),
+		icon = load("res://files/aric_expansion_images/potions/rendrassa_lube_bottle.png"),
 		description = "Vaginal Fluid that has been refined and bottled. During the refining process, it has gained the properties to restore minor [color=aqua]Energy[/color] as well as make the drinker feel [color=aqua]Lewd[/color] by drinking it. ",
 		effect = 'lubeeffect',
 		recipe = '',
@@ -1348,7 +1348,7 @@ var itemlist = {
 	bottledpiss = {
 		code = 'bottledpiss',
 		name = 'Bottled Piss',
-		icon = load("res://files/aric_expansion_images/items/milk_bottle_trans.png"),
+		icon = load("res://files/aric_expansion_images/potions/rendrassa_piss_bottle.png"),
 		description = "Urine that has been refined and bottled. During the refining process, it has gained the properties to restore [color=aqua]Energy[/color] as well as make the drinker feel incredibly [color=aqua]Lewd[/color] by drinking it. ",
 		effect = 'pisseffect',
 		recipe = '',
@@ -1362,7 +1362,7 @@ var itemlist = {
 	sedative = {
 		code = 'sedative',
 		name = 'Sedative',
-		icon = load("res://files/aric_expansion_images/items/sedative_trans.png"),
+		icon = load("res://files/aric_expansion_images/potions/rendrassa_sedative_potion_bottle.png"),
 		description = "Reduces the Energy of the consumer by anywhere from 25% to 50% of a normal person's daily [color=aqua]Energy[/color] level. It also has a chance to reduce the [color=aqua]Wits[/color] of consumers. ",
 		effect = 'sedativeeffect',
 		recipe = 'recipesedative',
@@ -1370,6 +1370,20 @@ var itemlist = {
 		type = 'potion',
 		toxicity = 15,
 		reqs = 'globals.state.mansionupgrades.mansionalchemy >= 1',
+		weight = 1,
+		amount = 0
+	},
+	sexchangepot = {
+		code = 'sexchangepot',
+		name = 'Sexual Conversion Tonic',
+		icon = load("res://files/aric_expansion_images/potions/sex_change_potion.png"),
+		description = "A powerful concoction that radically alters the drinker's sexual characteristics by flooding their body with magically charged hormones.",
+		effect = 'sexchangepoteffect',
+		recipe = 'recipesexchangepot',
+		cost = 250,
+		type = 'potion',
+		toxicity = 50,
+		reqs = 'globals.state.mansionupgrades.mansionalchemy >= 2',
 		weight = 1,
 		amount = 0
 	},
@@ -1466,13 +1480,19 @@ var recipeclaritypot = {
 ###---Added by Expansion---###
 var recipehyperlactationpot = {
 	lactationpot = 1,
-	bottledmilk = 3
+	bottledmilk = 3,
 }
 
 var recipesedative = {
 	basicsolutioning = 1,
 	taintedessenceing = 1,
-	bottledmilk = 1
+	bottledmilk = 1,
+}
+
+var recipesexchangepot = {
+	taintedessenceing = 1,
+	bottledsemen = 2,
+	bottledlube= 2,
 }
 ###---End Expansion
 
@@ -1519,7 +1539,7 @@ func energy_cur(value):
 	return ''
 
 func toxicity(value):
-	person.energy -= value
+	person.toxicity -= value
 	return ''
 
 func beauty(value):
@@ -1527,6 +1547,7 @@ func beauty(value):
 
 func lust(value):
 	person.lust += value
+	return ''
 
 func luxury(value):
 	person.luxury += value
@@ -1616,7 +1637,7 @@ func ancientswordeffect(person):
 	var text = person.dictionary("$name finds $himself examining the blade at $his side throughout the day. ")
 	if person.cour > 40:
 		text += person.dictionary("The still-sharp blade gives $him confidence that $he will survive many battles as well while wielding it.\n")
-		person.conf_base += round(rand_range(1,3))
+		person.conf += round(rand_range(1,3))
 	else:
 		text += person.dictionary("The ancient bloodstains on its metal blade makes $him wonder when that is all $he will be as well and $he grows fearful.\n")
 		person.fear += round(rand_range(3,5))
@@ -1722,25 +1743,25 @@ func maturingpot():
 		else:
 			text = person.dictionary('You hand an Elixir of Maturity to $name, and tell $him to drink it. After a few moments, $his body begins to change. $He looks down in bewilderment, then checks out $his new, more mature-looking self in a nearby mirror. ')
 		if rand_range(1,10) > 5 && person.height != 'tiny' && person.height != 'towering':
-			person.height = globals.heightarray[globals.heightarray.find(person.height)+1]
+			person.height = globals.heightarrayexp[globals.heightarrayexp.find(person.height)+1]
 			text = text + "$name has become taller. "
 		if rand_range(1,10) > 5 && person.hairlength != 'hips':
 				person.hairlength = globals.hairlengtharray[globals.hairlengtharray.find(person.hairlength)+1]
 				text = text + "$name's hair has grown longer. "
 		if person.sex != 'male':
 			if rand_range(1,10) > 5 && person.asssize != 'huge':
-				person.asssize = globals.sizearray[globals.sizearray.find(person.asssize)+1]
+				person.asssize = globals.asssizearray[globals.asssizearray.find(person.asssize)+1]
 				text = text + "$name's butt has grown bigger. "
-			if rand_range(1,10) > 5 && person.titssize != 'huge':
-				person.titssize = globals.sizearray[globals.sizearray.find(person.titssize)+1]
+			if rand_range(1,10) > 5 && person.titssize != 'immobilizing':
+				person.titssize = globals.titssizearray[globals.titssizearray.find(person.titssize)+1]
 				text = text + "$name's tits have grown bigger. "
 		if person.penis != 'none':
-			if rand_range(1,10) > 5 && person.penis != 'big':
-				person.penis = globals.genitaliaarray[globals.genitaliaarray.find(person.penis)+1]
+			if rand_range(1,10) > 5 && person.penis != 'massive':
+				person.penis = globals.penissizearray[globals.penissizearray.find(person.penis)+1]
 				text = text + "$name's cock has grown bigger. "
 		if person.balls != 'none':
-			if rand_range(1,10) > 5 && person.balls != 'big':
-				person.balls = globals.genitaliaarray[globals.genitaliaarray.find(person.balls)+1]
+			if rand_range(1,10) > 5 && person.balls != 'massive':
+				person.balls = globals.penissizearray[globals.penissizearray.find(person.balls)+1]
 				text = text + "$name's balls have grown bigger. "
 	else:
 		text = 'Elixir of Maturity had no visible effect on $name. '
@@ -1758,22 +1779,22 @@ func youthingpot():
 		else:
 			text = person.dictionary('You hand an Elixir of Youth over to $name and tell $him to drink it. After a few moments, $his body begins to change. $He looks down in bewilderment, then checks out $his new, younger-looking self in a nearby mirror. ')
 		if rand_range(1,10) > 5 && person.height != 'tiny' && person.height != 'petite':
-			person.height = globals.heightarray[globals.heightarray.find(person.height)-1]
+			person.height = globals.heightarrayexp[globals.heightarrayexp.find(person.height)-1]
 			text = text + "$name has become shorter. "
 		if person.sex != 'male':
 			if rand_range(1,10) > 5 && person.asssize != 'flat':
-				person.asssize = globals.sizearray[globals.sizearray.find(person.asssize)-1]
+				person.asssize = globals.asssizearray[globals.asssizearray.find(person.asssize)-1]
 				text = text + "$name's butt shrinks in size. "
-			if rand_range(1,10) > 5 && person.titssize != 'flat':
-				person.titssize = globals.sizearray[globals.sizearray.find(person.titssize)-1]
+			if rand_range(1,10) > 5 && person.titssize != 'flat' && !(person.sex == 'dickgirl' && person.titssize == 'small'):
+				person.titssize = globals.titssizearray[globals.titssizearray.find(person.titssize)-1]
 				text = text + "$name's tits shrink in size. "
 		if person.penis != 'none':
-			if rand_range(1,10) > 5 && person.penis != 'small':
-				person.penis = globals.genitaliaarray[globals.genitaliaarray.find(person.penis)-1]
+			if rand_range(1,10) > 5 && person.penis != 'micro':
+				person.penis = globals.penissizearray[globals.penissizearray.find(person.penis)-1]
 				text = text + "$name's cock shrinks in size. "
 		if person.balls != 'none':
-			if rand_range(1,10) > 5 && person.balls != 'small':
-				person.balls = globals.genitaliaarray[globals.genitaliaarray.find(person.balls)-1]
+			if rand_range(1,10) > 5 && person.balls != 'micro':
+				person.balls = globals.penissizearray[globals.penissizearray.find(person.balls)-1]
 				text = text + "$name's balls shrink in size. "
 	else:
 		text = 'Elixir of Youth had no visible effect on $name. '
@@ -1793,6 +1814,14 @@ func amnesiapoteffect():
 	if person.loyal < 50 && person.memory != 'clear':
 		text = text + person.dictionary("$He grows closer to you, having no one else $he can rely on. ")
 		person.loyal += rand_range(15,25) - person.conf/10
+	###---Added by Expansion---### Vice Removal
+	if person.mind.vice != "none":
+		if person.mind.vice_known == true:
+			text += person.dictionary("\n$His mental regression seems to have removed $his [color=aqua]"+ str(person.mind.vice.capitalize()) +" Vice[/color] as well. ")
+		person.mind.vice = "none"
+		person.mind.vice_removed = true
+		person.mind.vice_known = true
+	###---End Expansion---###
 	for i in person.relations:
 		person.relations[i] = 0
 		if i == globals.player.id:
@@ -2003,7 +2032,36 @@ func sedativeeffect():
 		text += person.dictionary("$He opens $his mouth as if $he is going to speak, then starts to drool slightly. You touch $his face and $his dull eyes drift toward your face. The heavy dose of sedatives in $his mentally weakened state seems to have permanently lowered $his [color=aqua]Wits[/color]. ")	
 	person.energy -= number
 	return text
-	
+
+func sexchangepoteffect():
+	#Created by Rendrassa
+	var text = ''
+	match person.sex:
+		'male':
+			person.penis = ""
+			person.balls = ""
+			person.vagina = globals.randomitemfromarray(globals.vagsizearray)
+			person.vagvirgin = true
+			text = person.dictionary("$name's penis shrinks into a clitoris as vaginal lips form beneath it. ")
+			person.sex = 'female'
+			person.dailyevents.append('sex_changed_potion')
+		'female':
+			person.vagina = ""
+			person.penis = globals.randomitemfromarray(globals.penissizearray)
+			person.balls = globals.randomitemfromarray(globals.penissizearray)
+			text = person.dictionary("$name's clitoris morphs into a fully functional penis with a pair of testicles forming beneath it. ")
+			person.sex = 'male'
+			person.dailyevents.append('sex_changed_potion')
+		'futanari','dickgirl':
+			text = person.dictionary("The potion's magic fills $name with toxicity but there is no visible effect on $his body. ")
+	#Abnormal Sex
+	if text == "":
+		text = "The potion failed. It cannot understand the complexities of $name's sexuality. "
+	if person == globals.player:
+		text = text.replace("$name's", 'Your')
+		text = text.replace("$name", 'You')
+	return text
+
 ###---Expansion End---###
 
 
@@ -2208,6 +2266,7 @@ func sortbytype(first, second):
 
 func foodpurchase(item):
 	var amount = globals.itemdict.food.amount
+	amount = min(amount, ceil((globals.resources.foodcaparray[globals.state.mansionupgrades.foodcapacity] - globals.resources.food) / 20.0))
 	globals.resources.gold -= amount*globals.itemdict.food.cost
 	globals.resources.food += amount*20
 	globals.itemdict.food.amount = 0
@@ -2219,8 +2278,8 @@ func teleportunlock(item):
 	if item.code != 'teleportumbra':
 		globals.get_tree().get_current_scene().popup("Portal to " + item.code.replace('teleport','').capitalize() + ' has been unlocked.')
 	else:
-		globals.get_tree().get_current_scene().get_node("outside/shoppanel/inventory")._on_inventoryclose_pressed()
 		globals.get_tree().get_current_scene().get_node("outside").sebastianquest(4)
+		globals.get_tree().get_current_scene().get_node("outside/shoppanel/inventory")._on_inventoryclose_pressed()
 		globals.get_tree().get_current_scene().get_node("outside").shopclose()
 ###---End Expansion---###
 
