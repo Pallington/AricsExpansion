@@ -2067,7 +2067,7 @@ func _on_alchemy_pressed():
 		var newpotline = potline.duplicate()
 		potlist.add_child(newpotline)
 		if i.icon != null:
-			newpotline.get_node("potbutton/icon").set_texture(i.icon)
+			newpotline.get_node("potbutton/icon").set_texture(load(i.icon))
 		newpotline.show()
 		newpotline.get_node("potnumber").set_text(str(i.amount))
 		newpotline.get_node("potbutton").set_text(i.name)
@@ -2090,7 +2090,7 @@ func brewlistpressed(potion):
 	alchemyclear()
 	if potselected.icon != null:
 		get_node("MainScreen/mansion/alchemypanel/Panel 2").show()
-		get_node("MainScreen/mansion/alchemypanel/Panel 2/bigicon").set_texture(potselected.icon)
+		get_node("MainScreen/mansion/alchemypanel/Panel 2/bigicon").set_texture(load(potselected.icon))
 	get_node("MainScreen/mansion/alchemypanel/Label").show()
 	get_node("MainScreen/mansion/alchemypanel/Label1").show()
 	for i in array:
