@@ -1396,11 +1396,25 @@ var itemlist = {
 		description = "An ingot of decent-quality iron.",
 		effect = '',
 		recipe = '',
-		cost = 50,
+		cost = 40,
 		type = 'ingredient',
 		toxicity = 0,
-		reqs = 'globals.state.mansionupgrades.mansionalchemy >= 1',
+		reqs = false,
 		weight = 2,
+		amount = 0
+	},
+	manaing = {
+		code = 'manaing',
+		name = 'Mana',
+		icon = load('res://files/buttons/mana2'),
+		description = "Mana. Y'know, from the top bar. Screwing people. That stuff.",
+		effect = '',
+		recipe = '',
+		cost = 999999999,
+		type = 'ingredient',
+		toxicity = 0,
+		reqs = false,
+		weight = 0,
 		amount = 0
 	}
 	
@@ -1515,7 +1529,8 @@ var recipesexchangepot = {
 
 #crafting
 var recipedagger = {
-	ironing = 1
+	ironing = 1,
+	manaing = 20
 }
 #crafting
 
@@ -2139,14 +2154,16 @@ func recipemake(item):
 	var recipe = item.recipe
 	#print(str(craftitemingredients))
 	var amount = 0
-	for i in get(recipe):
-		count = 0
+	for i in get(recipe):		
 		amount = get(recipe)[i]
 		###---Added By Expansion ---###
-		if (globals.items.itemlist[i].type == "potion" || globals.items.itemlist[i].type == "ingredient"):
+		if(i == "manaing"):
+			globals.resources.mana -= amount 
+		elif (globals.items.itemlist[i].type == "potion" || globals.items.itemlist[i].type == "ingredient"):
 			var ingredient = globals.itemdict[i]
 			ingredient.amount -= amount
 		else:
+			count = 0
 			dupearrayunstackables = globals.state.unstackables.duplicate().values()
 			dupearrayunstackables.sort_custom(globals.items,"sortbyenchantPall")
 			for j in dupearrayunstackables:
@@ -2276,6 +2293,8 @@ func sortitems(first, second):
 
 func sortbytype(first, second):
 	var type = ['potion','ingredient']
+	if first == 'mana' || second == 'mana':
+		return (first == 'mana')
 	if type.find(globals.itemdict[first].type) > type.find(globals.itemdict[second].type):
 		return false
 	elif type.find(globals.itemdict[first].type) == type.find(globals.itemdict[second].type):
