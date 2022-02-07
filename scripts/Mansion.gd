@@ -2076,7 +2076,7 @@ func _on_alchemy_pressed():
 	alchemyclear()
 	get_node("MainScreen/mansion/alchemypanel/brewbutton").set_disabled(true)
 
-func brewlistpressed(potion): #merge with existing function.
+func brewlistpressed(potion):
 	potselected = potion
 	var counter = get_node("MainScreen/mansion/alchemypanel/brewcounter").get_value()
 	var text = ''
@@ -2094,41 +2094,34 @@ func brewlistpressed(potion): #merge with existing function.
 	get_node("MainScreen/mansion/alchemypanel/Label").show()
 	get_node("MainScreen/mansion/alchemypanel/Label1").show()
 	for i in array:
-		if (globals.items.itemlist[i].type == "potion" || globals.items.itemlist[i].type == "ingredient"): #editededed
-			#print("one")
-			var item = globals.itemdict[i]
-			var newpanel = get_node("MainScreen/mansion/alchemypanel/VBoxContainer/Panel").duplicate()
-			get_node("MainScreen/mansion/alchemypanel/VBoxContainer/").add_child(newpanel)
-			newpanel.show()
-			newpanel.get_node("icon").set_texture(item.icon)
-			newpanel.get_node("icon").connect("mouse_entered",globals, 'showtooltip', [item.description])
-			newpanel.get_node("icon").connect("mouse_exited",globals, 'hidetooltip')
-			newpanel.get_node('name').set_text(item.name)
-			newpanel.get_node("number").set_text(str(recipedict[i]*counter))
+		var item = globals.itemdict[i]
+		var newpanel = get_node("MainScreen/mansion/alchemypanel/VBoxContainer/Panel").duplicate()
+		get_node("MainScreen/mansion/alchemypanel/VBoxContainer/").add_child(newpanel)
+		newpanel.show()
+		newpanel.get_node("icon").set_texture(item.icon)
+		newpanel.get_node("icon").connect("mouse_entered",globals, 'showtooltip', [item.description])
+		newpanel.get_node("icon").connect("mouse_exited",globals, 'hidetooltip')
+		newpanel.get_node('name').set_text(item.name)
+		newpanel.get_node("number").set_text(str(recipedict[i]*counter))
+		var type = globals.items.itemlist[i].type
+		var amount = 0
+		if (type == "potion" || type == "ingredient") && (i != "manaing"): 
 			newpanel.get_node("totalnumber").set_text(str(item.amount))
-			if item.amount < recipedict[i]*counter:
-				newpanel.get_node("totalnumber").set('custom_colors/font_color', Color(1,0.29,0.29))
-				brewable = false
+			amount= item.amount
+		elif i == "manaing":
+			amount = globals.resources.mana	
 		else:
-			#print("two")
-			var item = globals.itemdict[i]
 			var founditem = 0
 			for i in globals.state.unstackables.values():
 				print(i.code)
 				if i.code == item.code && i.owner == null:
 					founditem += 1
-			var newpanel = get_node("MainScreen/mansion/alchemypanel/VBoxContainer/Panel").duplicate()
-			get_node("MainScreen/mansion/alchemypanel/VBoxContainer/").add_child(newpanel)
-			newpanel.show()
-			newpanel.get_node("icon").set_texture(item.icon)
-			newpanel.get_node("icon").connect("mouse_entered",globals, 'showtooltip', [item.description])
-			newpanel.get_node("icon").connect("mouse_exited",globals, 'hidetooltip')
-			newpanel.get_node('name').set_text(item.name)
-			newpanel.get_node("number").set_text(str(recipedict[i]*counter))
 			newpanel.get_node("totalnumber").set_text(str(founditem))
-			if founditem < recipedict[i]*counter:
-				newpanel.get_node("totalnumber").set('custom_colors/font_color', Color(1,0.29,0.29))
-				brewable = false
+			amount = founditem
+			
+		if amount < recipedict[i]*counter:
+			newpanel.get_node("totalnumber").set('custom_colors/font_color', Color(1,0.29,0.29))
+			brewable = false
 		#print("three")
 	text = text + '\n[center][color=aqua]'+ potselected.name + '[/color][/center]\n' + '' + potselected.description + '\n'
 	for i in get_tree().get_nodes_in_group('alchemypot'):
@@ -2139,10 +2132,8 @@ func brewlistpressed(potion): #merge with existing function.
 		brewable = false
 	if brewable == false:
 		get_node("MainScreen/mansion/alchemypanel/brewbutton").set_disabled(true)
-		#print("falseset")
 	else:
 		get_node("MainScreen/mansion/alchemypanel/brewbutton").set_disabled(false)
-		#print("trueset")
 ###---Added by Expansion---### Added by Pallington
 
 ###---Added by Expansion---### Added by Deviate, Tweaked by Aric, Tested by Banana
