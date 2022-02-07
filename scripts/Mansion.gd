@@ -2098,7 +2098,7 @@ func brewlistpressed(potion):
 		var newpanel = get_node("MainScreen/mansion/alchemypanel/VBoxContainer/Panel").duplicate()
 		get_node("MainScreen/mansion/alchemypanel/VBoxContainer/").add_child(newpanel)
 		newpanel.show()
-		newpanel.get_node("icon").set_texture(item.icon)
+		newpanel.get_node("icon").set_texture(load(item.icon))
 		newpanel.get_node("icon").connect("mouse_entered",globals, 'showtooltip', [item.description])
 		newpanel.get_node("icon").connect("mouse_exited",globals, 'hidetooltip')
 		newpanel.get_node('name').set_text(item.name)
