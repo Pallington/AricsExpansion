@@ -2060,7 +2060,7 @@ func _on_alchemy_pressed():
 			i.queue_free()
 	var array = []
 	for i in globals.itemdict.values():
-		if i.recipe != '' && globals.evaluate(i.reqs):
+		if i.has("creqs") && i.recipe != '' && globals.evaluate(i.creqs):
 			array.append(i)
 	array.sort_custom(globals.items,'sortitems')
 	for i in array:
